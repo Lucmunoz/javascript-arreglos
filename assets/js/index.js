@@ -342,6 +342,13 @@ const mostrarPropiedades = (tipo) => {
         <p><i class="fas fa-map-marker-alt"></i> ${propiedad.ubicacion}</p>
         <p><i class="fas fa-bed"></i> ${propiedad.habitaciones} Habitaciones | <i class="fas fa-bath"></i>${propiedad.banos} Baños</p> 
         <p><i class="fas fa-dollar-sign"></i> ${propiedad.costo.toFixed(3)}</p>
+
+        /*
+            el desafío solicita utilizar condiciones para evaluar casos particulares de cada vivienda. Si es que permiten o no fumar
+            y tener o no mascotas. En virtud de cada alternativa, se muestra un respectivo icono y texto asociado. Para esto, en vez de un if
+            utilizamos el operador condicional (ternario) evaluando el valor del atributo smoke y pets de cada objeto. Esto es lo mismo que hacer
+            propedad.smoke ===true o False pero de una forma abreviada ya que el valor del atributo en si mismo es true o false.
+        */
         <p class= "${propiedad.smoke ? "text-success":"text-danger" }"> ${propiedad.smoke ? "<i class=\"fas fa-smoking\"></i> Permitido fumar" : "<i class=\"fas fa-smoking-ban\"></i> No se permite fumar "}</p>
         <p class= "${propiedad.pets ? "text-success":"text-danger" }"> ${propiedad.pets ?  "<i class=\"fas fa-paw\"></i> Mascotas permitidas" : "<i class=\"fa-solid fa-ban\"></i> No se permiten mascotas"}</p>
         `;  
