@@ -238,13 +238,16 @@ const mostrarPropiedades = (tipo) => {
     let arregloPropiedades =[];
 
     /*  Antes de mostrar los objetos, tengo que definir cuantos son los que se mostrarán. Si la pagina es el index, hay una limitante de 3 elementos
-        por cada arreglo. Si la pagina abierta corresponde a la pagina de propiedades en venta o alquiler, muestro todos los elementos del respectivo
-        arreglo.*/
+            por cada arreglo. Si la pagina abierta corresponde a la pagina de propiedades en venta o alquiler, muestro todos los elementos del respectivo
+        arreglo.
+        */
     if(page === "index.html"){
 
         if(tipo==="venta"){
+            
             /*Asigno a la variable contenedor la referencia al contenedor del HTML que contiene (o mas bien, contendrá) las cards una vez que estas
               renderizen mediante el uso de templates*/
+
             contenedor=contenedor_venta
             // arregloPropiedades contendrá los primeros 3 objetos del arreglo propiedades_venta.
             for (let i=0; i<3; i++){
@@ -384,10 +387,8 @@ const mostrarPropiedades = (tipo) => {
             </div>
         </div>
     </div>
-
-    */ 
+   
     
-    /*
     La estructura anterior debo injectarla en algun sitio del DOM y para ello, haré uso de la variable "contenedor" la cual tiene la referencia
     al objeto del DOM donde debo inyectar la estructura recien creada pero ojo con lo siguiente:
 
@@ -435,6 +436,7 @@ const mostrarPropiedades = (tipo) => {
     Para inyectar antes del anchor uso del metodo insertBefore  o "inyectar antes" el cual inyectará el nodo (divRow) ANTES de una determinada 
     referencia (nodo). En este caso, dicha referencia o nodo es el elemento anchor, cuya referencia es contenedor.children[1]. recordar que 
     contenedor.children[0] es el titulo h2.
+     
      */
 
     contenedor.children[1] === undefined ?  contenedor.append(divRow): contenedor.insertBefore(divRow,contenedor.children[1]);
