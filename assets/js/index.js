@@ -187,7 +187,7 @@ var path = window.location.pathname;
 var page = path.split("/").pop();
 
 
-if(page === "index.html"){                          //Si la página abierta es el index.html
+if(page === "index.html"){  //Si la página abierta es el index.html
 
     /*  Si la página abierta es el index.html, cuando esta se abra y cargue ejecutaré la funcion "mostrarPropiedades" dos veces. 
         Esta función es la encargada de desplegar la información de las propiedades en función del argumento ingresado. A partir 
@@ -201,7 +201,7 @@ if(page === "index.html"){                          //Si la página abierta es e
     });
     
 }
-else if (page === "propiedades_venta.html"){
+else if (page === "propiedades_venta.html"){ //Si la página abierta es el propiedades_venta.html
 
     /*  Si la página abierta es el propiedades_venta.html, cuando esta se abra y cargue ejecutaré la funcion "mostrarPropiedades"
         entregando el argumento "venta" como parámetro para mostrar propiedades en venta
@@ -211,7 +211,7 @@ else if (page === "propiedades_venta.html"){
     });
     
 }
-else if (page === "propiedades_alquiler.html"){
+else if (page === "propiedades_alquiler.html"){ //Si la página abierta es el propiedades_alquiler.html
 
     /*  Si la página abierta es el propiedades_alquiler.html, cuando esta se abra y cargue ejecutaré la funcion "mostrarPropiedades"
         entregando el argumento "alquiler" como parámetro para mostrar propiedades en alquiler
@@ -222,23 +222,37 @@ else if (page === "propiedades_alquiler.html"){
 
 }
 
+/*  FUNCIÓN mostrarPropiedades
+    Es la función encargada de cargar en pantalla (renderizar) los objetos cada arreglo (propiedades en venta y en alquiler) según
+    el tipo de página que esté abierta. En la página principal solo se mostrarán 3 elementos de cada arreglo y en la página dedicada
+    ya sea de vntas o alquiler, se mostrarán en pantalla todos los objetos del arreglo.
 
+    La función es anónima del tipo flecha.
+ */
     
 const mostrarPropiedades = (tipo) => {
 
-
-    let contenedor = null;
+    //Variable contenedor tendrá la referencia al elemento del DOM donde se renderizarán (inyectrán) los objetos. De momento es del tipo null.
+    let contenedor = null; 
+    //Creamos un arreglo vacío al cual se agregarán, mediante el metodo push, los objetos a mostrar en pantalla.
     let arregloPropiedades =[];
 
+    /*  Antes de mostrar los objetos, tengo que definir cuantos son los que se mostrarán. Si la pagina es el index, hay una limitante de 3 elementos
+        por cada arreglo. Si la pagina abierta corresponde a la pagina de propiedades en venta o alquiler, muestro todos los elementos del respectivo
+        arreglo.*/
     if(page === "index.html"){
 
         if(tipo==="venta"){
+            /*Asigno a la variable contenedor la referencia al contenedor del HTML que contiene (o mas bien, contendrá) las cards una vez que estas
+              renderizen mediante el uso de templates*/
             contenedor=contenedor_venta
+            // arregloPropiedades contendrá los primeros 3 objetos del arreglo propiedades_venta.
             for (let i=0; i<3; i++){
             arregloPropiedades.push(propiedades_venta[i]);
             }
         }
         else if(tipo ==="alquiler"){
+
             contenedor=contenedor_alquiler
             for (let i=0; i<3; i++){
             arregloPropiedades.push(propiedades_alquiler[i]);
@@ -246,6 +260,8 @@ const mostrarPropiedades = (tipo) => {
         }
     }
 
+    /*  Si la pagina abierta es la pagina de ventas o alquileres, el arreglo arregloPropiedades toma todos los elementos del arreglo propiedades_venta
+        o propiedades_alquiler según corresponda*/
     else if (page === "propiedades_venta.html"){
         contenedor=contenedor_venta
         arregloPropiedades = propiedades_venta
@@ -256,22 +272,67 @@ const mostrarPropiedades = (tipo) => {
 
     }
 
+    /*  El HTML "en general" considera la siguiente estructura para mostrar las cards:
 
+        <section id = (venta o alquiler)>
+            <h2>Titulo</h2>
+            <div class ="row">
+                <div class ="col...">
+                    <div class ="card 1"> 
+                        <img>
+                        <div class="card-body"><div>
+                    </div>
+                </div>
+                <div class ="col...">
+                    <div class ="card 2">
+                        <img>
+                        <div class="card-body"><div>
+                    </div>
+                </div>
+                <div class ="col...">
+                    <div class ="card 3">
+                        <img>
+                        <div class="card-body"><div>
+                    </div>
+                </div>
+            </div>
+        </section>
+                 
+        A partir de la estructura presentada, se observa que cada card está contenida dentro de un contenedor de clase "col..." luego, varios
+        de estos contenedores (que son hermanos) están contenidos dentro de un unico contenedor de clase "row".
+
+        Se aprecia ademas que cada card se compone de dos elementos hermanos entre si. La imagen y el cuerpo de la card.*/
+
+            
+    //  Creo un elemento div y le asigno la clase "row"
     const divRow = document.createElement("div");
     divRow.className="row";       
 
+    /*  Procedo a recorrer el arreglo creado en la sección anterior, "arregloPropiedades", el cual se llenó con una cantidad determinada de objetos
+        según el tipo de página abierta.*/
     for (let propiedad of arregloPropiedades){
 
+        //  Creo un elemento div y le asigno la clase "col..."
         const divCol = document.createElement("div");
         divCol.className ="col-md-4 mb-4"; 
 
+        //  Creo un elemento div y le asigno la clase "card"
         const divCard = document.createElement("div");                  
         divCard.className ="card";
+
+        /*  Como ya dijimos la card se compone de dos elementos. La imágen y el cuerpo de la card. En primer lugar, inserto la imágen haciendo uso
+        de un template */
         divCard.innerHTML=`
         <img class="" src="${propiedad.src}"/>
         `;   
+
+        //  Creo un elemento div y le asigno la clase "card-body" (cuerpo de la tarjeta)
         const divCardBody = document.createElement("div")
         divCardBody.className ="card-body";
+
+        /*  Haciendo uso de un template, voy cargando por referencia los datos del objeto. Como estoy dentro de un ciclo, se cargarán los datos
+            de todos los objetos dentro del arreglo.*/
+
         divCardBody.innerHTML=`
         <h5 class="card-title">${propiedad.nombre}</h5>
         <p class="card-text">${propiedad.descripcion}</p>
@@ -282,12 +343,100 @@ const mostrarPropiedades = (tipo) => {
         <p class= "${propiedad.pets ? "text-success":"text-danger" }"> ${propiedad.pets ?  "<i class=\"fas fa-paw\"></i> Mascotas permitidas" : "<i class=\"fa-solid fa-ban\"></i> No se permiten mascotas"}</p>
         `;  
 
-        divRow.appendChild(divCol);
-        divCard.append(divCardBody) 
-        divCol.appendChild(divCard)
+        /*
+        A continuación, armo la estructura de los elementos div creados en la iteración.
 
-    }      
+        <elemento divCol>
+            <elemento divCard>
+                <elemento divCardBody>
+
+         */
+
+
+        divRow.append(divCol);    /*Los elementos divCol creado en cada iteración se agrega como hijo al elemento div padre (el de clase Row).
+                                    Recordar que el elemento div de clase row es uno solo y se creo fuera (antes) de la iteración*/
+
+        divCol.append(divCard);   /*Los elementos divCard creados en cada iteración, se agregan como hijo al divCol creado en la misma iteración*/  
+
+        divCard.append(divCardBody) ; /* Los elementos divCardBody creados en cada iteración, se agregan como hijo al elemento divCard creado en la iteración*/      
+
+    }     
+
+    /* Una vez terminado el ciclo, tendré la siguiente estructura
     
+    <div class ="row">
+        <div class ="col...">
+            <div class ="card 1"> 
+                <img>
+                <div class="card-body"><div>
+            </div>
+        </div>
+        <div class ="col...">
+            <div class ="card 2">
+                <img>
+                <div class="card-body"><div>
+            </div>
+        </div>
+        <div class ="col...">
+            <div class ="card 3">
+                <img>
+                <div class="card-body"><div>
+            </div>
+        </div>
+    </div>
+
+    */ 
+    
+    /*
+    La estructura anterior debo injectarla en algun sitio del DOM y para ello, haré uso de la variable "contenedor" la cual tiene la referencia
+    al objeto del DOM donde debo inyectar la estructura recien creada pero ojo con lo siguiente:
+
+    Ocurre que si estoy inyectando en la página principal, debo inyectar aca:
+    
+    <section id = (venta o alquiler)>
+        <h2>Titulo</h2>
+        *** inyectar aca <-----
+        <a ref ver todas las propiedades> (boton negro)
+    </section>
+
+    pero si estoy en la pagina dedicada, la estructura cambia, porque ya no tengo el boton negro. 
+
+    <section id = (venta o alquiler)>
+        <h2>Titulo</h2>
+        *** inyectar aca <-----
+    </section>  
+
+    Entonces, para poder detectar donde inyectar hago uso del metodo children[1] para el contenedor. Recordar que el contenedor contiene la referencia
+    hacia el contenedo donde debo inyectar la información de cada objeto. el metodo Children [1] me devolverá un valor válido si es que estoy en la
+    pagina de inicio (index.html) porque el contenedor.children[0] será el titulo h2 y luego el contenedor.children[1] será el anchor.
+
+    Si estoy en una de las paginas dedicadas contenedor.children[0] será el título h2 pero luego contenedor.children [1] será indefinido al no existir
+    el hijo[1]
+
+    haciendo uso del operador condicional (ternario) evaluo esta condición -> contenedor.children[1] === undefined
+
+    luego, si el valor es verdadero, es decir estoy en una pagina dedicada a mostrar todas las propiedades de venta o alquiler entonces,
+    haciendo uso del metodo: contenedor.append(divRow) agrego el contenedor de clase row (que contiene todos los col que a su vez continen las cards)
+    como último elemento hijo.
+
+    <section id = (venta o alquiler)>
+        <h2>Titulo</h2>
+        *** inyectar aca <----- inyecto aca, como ultimo elemento hijo del contenedor principal.
+    </section> 
+
+    Por otra parte, si el valor es falso, es decir, contenedor.children [1] existe y por ende, esto en el index.html debo inyectar entr2 dos 
+    elementos, recordar:
+    <section id = (venta o alquiler)>
+        <h2>Titulo</h2>
+        *** inyectar aca <----- OJO. Debo inyectar antes del anchor.
+        <a ref ver todas las propiedades> (boton negro)
+    </section>
+
+    Para inyectar antes del anchor uso del metodo insertBefore  o "inyectar antes" el cual inyectará el nodo (divRow) ANTES de una determinada 
+    referencia (nodo). En este caso, dicha referencia o nodo es el elemento anchor, cuya referencia es contenedor.children[1]. recordar que 
+    contenedor.children[0] es el titulo h2.
+     */
+
     contenedor.children[1] === undefined ?  contenedor.append(divRow): contenedor.insertBefore(divRow,contenedor.children[1]);
       
 }
